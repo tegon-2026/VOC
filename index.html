@@ -224,7 +224,6 @@
           <option value="short" selected>Curto Simples 💇‍♂️</option>
           <option value="long">Longo Liso 💇‍♀️</option>
           <option value="curly">Crespo / Afro 🧑‍🦱</option>
-          <option value="topete">Topete Moderno Style 💈</option>
           <option value="pigtails">Maria-Chiquinha 👧</option>
           <option value="bald">Careca / Sem Cabelo 👨‍🦲</option>
           <option value="nun">Véu de Monja ✝️</option>
@@ -417,13 +416,13 @@
         `;
       }
 
-      // 2. CABELO (DIVIDIDO EM ATRÁS E FRANTE/FRANJA)
+      // 2. CABELO (DIVIDIDO EM ATRÁS E FRENTE/FRANJA)
       let backHairSVG = '';
       let frontHairSVG = '';
 
       if (hairStyle === 'short') {
         frontHairSVG = `
-          <path d="M 62 75 C 60 55, 65 40, 80 38 C 95 36, 120 30, 130 42 C 138 52, 138 65, 138 75 C 120 62, 80 62, 62 75 Z" fill="${hair}"/>
+          <path d="M 45 75 C 45 30, 155 30, 155 75 C 130 52, 110 53, 100 54 C 90 53, 70 52, 45 75 Z" fill="${hair}"/>
         `;
       } else if (hairStyle === 'long') {
         backHairSVG = `
@@ -451,6 +450,19 @@
           <circle cx="115" cy="52" r="9" fill="${hair}"/>
           <circle cx="130" cy="58" r="8" fill="${hair}"/>
         `;
+      } else if (hairStyle === 'pigtails') {
+        backHairSVG = `
+          <circle cx="42" cy="70" r="16" fill="${hair}"/>
+          <circle cx="158" cy="70" r="16" fill="${hair}"/>
+          <path d="M 38 70 C 30 100, 20 130, 35 145 C 45 130, 48 100, 46 70 Z" fill="${hair}"/>
+          <path d="M 162 70 C 170 100, 180 130, 165 145 C 155 130, 152 100, 154 70 Z" fill="${hair}"/>
+        `;
+        frontHairSVG = `
+          <path d="M 45 75 C 45 30, 155 30, 155 75 C 130 52, 110 53, 100 54 C 90 53, 70 52, 45 75 Z" fill="${hair}"/>
+        `;
+      } else if (hairStyle === 'bald') {
+        backHairSVG = '';
+        frontHairSVG = '';
       } else if (hairStyle === 'nun') {
         backHairSVG = `
           <path d="M 50 85 C 50 35, 150 35, 150 85 L 158 150 C 145 158, 55 158, 42 150 Z" fill="#111111"/>
