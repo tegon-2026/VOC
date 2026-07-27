@@ -222,6 +222,7 @@
         <label for="hair-style-select">Estilo do Cabelo:</label>
         <select id="hair-style-select">
           <option value="short" selected>Curto Simples 💇‍♂️</option>
+          <option value="quiff">Topete 💇‍♂️</option>
           <option value="long">Longo Liso 💇‍♀️</option>
           <option value="curly">Crespo / Afro 🧑‍🦱</option>
           <option value="pigtails">Maria-Chiquinha 👧</option>
@@ -416,20 +417,24 @@
         `;
       }
 
-      // 2. CABELO (DIVIDIDO EM ATRÁS E FRENTE/FRANJA)
+      // 2. CABELO
       let backHairSVG = '';
       let frontHairSVG = '';
 
       if (hairStyle === 'short') {
         frontHairSVG = `
-          <path d="M 45 75 C 45 30, 155 30, 155 75 C 130 52, 110 53, 100 54 C 90 53, 70 52, 45 75 Z" fill="${hair}"/>
+          <path d="M 56 76 C 54 36, 146 36, 144 76 C 128 58, 110 58, 100 59 C 90 58, 72 58, 56 76 Z" fill="${hair}"/>
+        `;
+      } else if (hairStyle === 'quiff') {
+        frontHairSVG = `
+          <path d="M 56 76 C 52 35, 70 15, 105 18 C 135 20, 146 45, 144 76 C 128 58, 110 58, 100 59 C 90 58, 72 58, 56 76 Z" fill="${hair}"/>
         `;
       } else if (hairStyle === 'long') {
         backHairSVG = `
           <path d="M 52 80 C 48 110, 50 150, 68 155 C 75 155, 78 130, 78 90 L 122 90 C 122 130, 125 155, 132 155 C 150 150, 152 110, 148 80 C 145 40, 55 40, 52 80 Z" fill="${hair}"/>
         `;
         frontHairSVG = `
-          <path d="M 45 75 C 45 30, 155 30, 155 75 C 130 52, 110 53, 100 54 C 90 53, 70 52, 45 75 Z" fill="${hair}"/>
+          <path d="M 56 76 C 54 36, 146 36, 144 76 C 128 58, 110 58, 100 59 C 90 58, 72 58, 56 76 Z" fill="${hair}"/>
         `;
       } else if (hairStyle === 'curly') {
         backHairSVG = `
@@ -458,7 +463,7 @@
           <path d="M 162 70 C 170 100, 180 130, 165 145 C 155 130, 152 100, 154 70 Z" fill="${hair}"/>
         `;
         frontHairSVG = `
-          <path d="M 45 75 C 45 30, 155 30, 155 75 C 130 52, 110 53, 100 54 C 90 53, 70 52, 45 75 Z" fill="${hair}"/>
+          <path d="M 56 76 C 54 36, 146 36, 144 76 C 128 58, 110 58, 100 59 C 90 58, 72 58, 56 76 Z" fill="${hair}"/>
         `;
       } else if (hairStyle === 'bald') {
         backHairSVG = '';
@@ -468,15 +473,15 @@
           <path d="M 50 85 C 50 35, 150 35, 150 85 L 158 150 C 145 158, 55 158, 42 150 Z" fill="#111111"/>
         `;
         frontHairSVG = `
-          <path d="M 45 75 C 45 30, 155 30, 155 75 C 130 52, 110 53, 100 54 C 90 53, 70 52, 45 75 Z" fill="#ffffff"/>
+          <path d="M 56 76 C 54 36, 146 36, 144 76 C 128 58, 110 58, 100 59 C 90 58, 72 58, 56 76 Z" fill="#ffffff"/>
         `;
       } else if (hairStyle === 'bride') {
         backHairSVG = `
           <path d="M 45 50 C 45 25, 155 25, 155 50 L 175 180 Q 100 200 25 180 Z" fill="#ffffff" opacity="0.6" stroke="#cbd5e1"/>
-          <path d="M 52 80 C 48 110, 50 135, 68 140 C 75 140, 78 120, 78 90 L 122 90 C 122 120, 125 140, 132 140 C 150 135, 152 110, 148 80 C 145 40, 55 40, 52 80 Z" fill="${hair}"/>
+          <path d="M 52 80 C 48 110, 50 135, 68 140 C 75 140, 78 120, 78 90 L 122 90 C 122 130, 125 140, 132 140 C 150 135, 152 110, 148 80 C 145 40, 55 40, 52 80 Z" fill="${hair}"/>
         `;
         frontHairSVG = `
-          <path d="M 45 75 C 45 30, 155 30, 155 75 C 130 52, 110 53, 100 54 C 90 53, 70 52, 45 75 Z" fill="${hair}"/>
+          <path d="M 56 76 C 54 36, 146 36, 144 76 C 128 58, 110 58, 100 59 C 90 58, 72 58, 56 76 Z" fill="${hair}"/>
           <path d="M 70 50 Q 100 40 130 50" stroke="#facc15" stroke-width="3" fill="none"/>
           <circle cx="100" cy="43" r="3.5" fill="#38bdf8"/>
         `;
@@ -488,7 +493,7 @@
         <circle cx="100" cy="85" r="42" fill="${skin}"/>
       `;
 
-      // 4. FEIÇÕES DO ROSTO (DESENHADAS POR CIMA DO CABELO E PELE)
+      // 4. FEIÇÕES DO ROSTO
       let eyesSVG = '';
       if (eyeShape === 'happy') {
         eyesSVG = `
@@ -592,7 +597,7 @@
         `;
       }
 
-      // MONTAGEM FINAL NA ORDEM CORRETA DAS CAMADAS
+      // MONTAGEM FINAL
       svg.innerHTML = backHairSVG + clothesSVG + baseHeadSVG + frontHairSVG + faceFeaturesSVG + accessorySVG;
     }
 
