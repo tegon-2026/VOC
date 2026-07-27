@@ -1,0 +1,603 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Criador de Avatares Personalizado</title>
+  <!-- Importação da fonte Fredoka para funcionar em qualquer dispositivo/tablet -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&display=swap" rel="stylesheet">
+  
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+    body {
+      font-family: 'Fredoka', 'Comic Sans MS', sans-serif;
+      background-color: #f0f8ff;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 20px 15px;
+      margin: 0;
+      min-height: 100vh;
+    }
+    h1 {
+      color: #3b82f6;
+      margin-top: 5px;
+      margin-bottom: 20px;
+      text-align: center;
+      font-size: 2.2rem;
+      text-shadow: 1px 1px 0px #ffffff;
+    }
+    .main-container {
+      display: flex;
+      flex-direction: row;
+      gap: 25px;
+      max-width: 900px;
+      width: 100%;
+      background: #ffffff;
+      padding: 25px;
+      border-radius: 25px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+      align-items: flex-start;
+    }
+    @media (max-width: 768px) {
+      .main-container {
+        flex-direction: column;
+        align-items: center;
+        padding: 18px;
+      }
+    }
+    .preview-section {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      flex: 1;
+      width: 100%;
+      position: sticky;
+      top: 10px;
+    }
+    .avatar-wrapper {
+      position: relative;
+      width: 260px;
+      height: 260px;
+      border-radius: 50%;
+      border: 6px solid #3b82f6;
+      overflow: hidden;
+      background-color: #b6e3f4;
+      box-shadow: inset 0 0 12px rgba(0,0,0,0.12);
+      margin-bottom: 10px;
+    }
+    #avatar-svg {
+      width: 100%;
+      height: 100%;
+    }
+    .controls-section {
+      flex: 1.2;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .section-title {
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: #1e293b;
+      border-bottom: 3px solid #e2e8f0;
+      padding-bottom: 4px;
+      margin-top: 8px;
+      margin-bottom: 4px;
+    }
+    .control-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-weight: 600;
+      color: #334155;
+      font-size: 1rem;
+    }
+    select, input[type="text"] {
+      padding: 10px 12px;
+      border-radius: 12px;
+      border: 2px solid #cbd5e1;
+      font-size: 15px;
+      width: 60%;
+      outline: none;
+      font-family: inherit;
+      background-color: #f8fafc;
+    }
+    select:focus, input[type="text"]:focus {
+      border-color: #3b82f6;
+      background-color: #ffffff;
+    }
+    input[type="color"] {
+      border: 3px solid #cbd5e1;
+      width: 48px;
+      height: 48px;
+      cursor: pointer;
+      border-radius: 50%;
+      background: none;
+      padding: 2px;
+    }
+    .gender-toggle {
+      display: flex;
+      gap: 10px;
+      width: 100%;
+    }
+    .gender-btn {
+      flex: 1;
+      padding: 12px;
+      border: 2px solid #cbd5e1;
+      background-color: #f8fafc;
+      color: #64748b;
+      border-radius: 14px;
+      font-weight: 700;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: all 0.2s;
+      font-family: inherit;
+    }
+    .gender-btn.active {
+      background-color: #3b82f6;
+      color: white;
+      border-color: #3b82f6;
+      box-shadow: 0 4px 10px rgba(59, 130, 246, 0.3);
+    }
+    .btn-group {
+      display: flex;
+      gap: 12px;
+      margin-top: 15px;
+    }
+    button.action-btn {
+      flex: 1;
+      padding: 14px;
+      border-radius: 14px;
+      border: none;
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: white;
+      cursor: pointer;
+      transition: transform 0.1s, background-color 0.2s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      font-family: inherit;
+    }
+    button.action-btn:active {
+      transform: scale(0.97);
+    }
+    button.action-btn:disabled {
+      opacity: 0.7;
+      cursor: not-allowed;
+    }
+    #random-btn {
+      background-color: #ff5252;
+      box-shadow: 0 4px 10px rgba(255, 82, 82, 0.3);
+    }
+    #download-btn {
+      background-color: #2ed573;
+      box-shadow: 0 4px 10px rgba(46, 213, 115, 0.3);
+    }
+  </style>
+</head>
+<body>
+
+  <h1>🎨 Crie seu Avatar Personalizado!</h1>
+
+  <div class="main-container">
+    
+    <!-- PRÉ-VISUALIZAÇÃO -->
+    <div class="preview-section">
+      <div class="avatar-wrapper" id="avatar-bg">
+        <svg id="avatar-svg" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+          <!-- Desenhado via JS -->
+        </svg>
+      </div>
+    </div>
+
+    <!-- CONTROLES -->
+    <div class="controls-section">
+      
+      <div class="control-row">
+        <label for="name-input">Nome / Apelido:</label>
+        <input type="text" id="name-input" value="Meu Avatar" placeholder="Digite seu nome">
+      </div>
+
+      <div class="section-title">Perfil</div>
+      <div class="gender-toggle">
+        <button class="gender-btn active" id="btn-boy" onclick="setGender('boy')">👦 Menino</button>
+        <button class="gender-btn" id="btn-girl" onclick="setGender('girl')">👧 Menina</button>
+      </div>
+
+      <div class="section-title">Aparência</div>
+      
+      <div class="control-row">
+        <label for="skin-color">Cor da Pele:</label>
+        <input type="color" id="skin-color" value="#f1c27d">
+      </div>
+
+      <div class="control-row">
+        <label for="hair-color">Cor do Cabelo:</label>
+        <input type="color" id="hair-color" value="#4a312c">
+      </div>
+
+      <div class="control-row">
+        <label for="eye-color">Cor dos Olhos:</label>
+        <input type="color" id="eye-color" value="#2d3748">
+      </div>
+
+      <div class="control-row">
+        <label for="eye-shape-select">Formato dos Olhos:</label>
+        <select id="eye-shape-select">
+          <option value="normal" selected>Normal 👀</option>
+          <option value="happy">Feliz 😊</option>
+          <option value="wink">Piscando 😉</option>
+          <option value="stars">Estrelas 🤩</option>
+        </select>
+      </div>
+
+      <div class="control-row">
+        <label for="mouth-color">Cor da Boca:</label>
+        <input type="color" id="mouth-color" value="#2d3748">
+      </div>
+
+      <div class="control-row">
+        <label for="mouth-shape-select">Formato da Boca:</label>
+        <select id="mouth-shape-select">
+          <option value="smile" selected>Sorriso 😊</option>
+          <option value="open">Sorrindo Aberto 😄</option>
+          <option value="neutral">Neutro 😐</option>
+          <option value="surprised">Surpreso 😮</option>
+        </select>
+      </div>
+
+      <div class="control-row">
+        <label for="bg-color">Cor do Fundo:</label>
+        <input type="color" id="bg-color" value="#b6e3f4">
+      </div>
+
+      <div class="section-title">Roupas e Acessórios</div>
+
+      <div class="control-row">
+        <label for="clothes-select">Roupa:</label>
+        <select id="clothes-select">
+          <!-- Preenchido via JS -->
+        </select>
+      </div>
+
+      <div class="control-row">
+        <label for="accessory-select">Acessório / Colo:</label>
+        <select id="accessory-select">
+          <option value="none">Nenhum</option>
+          <option value="baby" selected>Segurando Bebê 👶</option>
+          <option value="glasses">Óculos 👓</option>
+          <option value="cap">Gorro / Touca 🧢</option>
+        </select>
+      </div>
+
+      <div class="btn-group">
+        <button class="action-btn" id="random-btn" onclick="randomize()">🎲 Aleatório</button>
+        <button class="action-btn" id="download-btn" onclick="downloadPNG()">📥 Baixar PNG</button>
+      </div>
+
+    </div>
+  </div>
+
+  <script>
+    let currentGender = 'boy';
+
+    const boyClothes = [
+      { id: 'priest', name: 'Batina Branca de Padre' },
+      { id: 'augustinian_boy', name: 'Hábito Agostiniano Preto' },
+      { id: 'suit', name: 'Terno com Gravata' },
+      { id: 'dino', name: 'Camiseta de Dinossauro' },
+      { id: 'hoodie', name: 'Moletom Colorido' },
+      { id: 'superhero', name: 'Fantasia de Super-Herói' }
+    ];
+
+    const girlClothes = [
+      { id: 'augustinian_girl', name: 'Hábito de Monja Agostiniana' },
+      { id: 'bride', name: 'Vestido e Véu de Noiva' },
+      { id: 'floral_dress', name: 'Vestido Floral' },
+      { id: 'hoodie', name: 'Moletom Colorido' },
+      { id: 'superhero', name: 'Fantasia de Super-Herói' }
+    ];
+
+    function setGender(gender) {
+      currentGender = gender;
+      document.getElementById('btn-boy').classList.toggle('active', gender === 'boy');
+      document.getElementById('btn-girl').classList.toggle('active', gender === 'girl');
+      
+      const select = document.getElementById('clothes-select');
+      select.innerHTML = '';
+      const list = gender === 'boy' ? boyClothes : girlClothes;
+      list.forEach(item => {
+        const opt = document.createElement('option');
+        opt.value = item.id;
+        opt.textContent = item.name;
+        select.appendChild(opt);
+      });
+
+      renderAvatar();
+    }
+
+    function renderAvatar() {
+      const skin = document.getElementById('skin-color').value;
+      const hair = document.getElementById('hair-color').value;
+      const eyeColor = document.getElementById('eye-color').value;
+      const eyeShape = document.getElementById('eye-shape-select').value;
+      const mouthColor = document.getElementById('mouth-color').value;
+      const mouthShape = document.getElementById('mouth-shape-select').value;
+      const bg = document.getElementById('bg-color').value;
+      const clothes = document.getElementById('clothes-select').value;
+      const accessory = document.getElementById('accessory-select').value;
+
+      document.getElementById('avatar-bg').style.backgroundColor = bg;
+
+      const svg = document.getElementById('avatar-svg');
+      svg.innerHTML = '';
+
+      // 1. ROUPA
+      let clothesSVG = '';
+      if (clothes === 'priest') {
+        clothesSVG = `
+          <path d="M 50 145 C 50 120, 150 120, 150 145 L 165 200 L 35 200 Z" fill="#ffffff" stroke="#cbd5e1" stroke-width="2"/>
+          <path d="M 85 130 L 115 130 L 110 200 L 90 200 Z" fill="#f8fafc" opacity="0.5"/>
+          <rect x="88" y="128" width="24" height="8" rx="2" fill="#1e293b"/>
+          <rect x="95" y="129" width="10" height="6" fill="#ffffff"/>
+          <path d="M 100 145 L 100 165 M 93 152 L 107 152" stroke="#d97706" stroke-width="3" stroke-linecap="round"/>
+        `;
+      } else if (clothes === 'augustinian_boy' || clothes === 'augustinian_girl') {
+        clothesSVG = `
+          <path d="M 45 140 C 45 115, 155 115, 155 140 L 170 200 L 30 200 Z" fill="#1e1e1e"/>
+          <path d="M 65 125 C 80 145, 120 145, 135 125 C 150 145, 140 160, 100 165 C 60 160, 50 145, 65 125 Z" fill="#111111"/>
+          <rect x="60" y="170" width="80" height="8" rx="4" fill="#383838"/>
+          <path d="M 120 170 L 122 198" stroke="#383838" stroke-width="5" stroke-linecap="round"/>
+        `;
+      } else if (clothes === 'suit') {
+        clothesSVG = `
+          <path d="M 45 145 C 45 120, 155 120, 155 145 L 170 200 L 30 200 Z" fill="#334155"/>
+          <polygon points="85,125 115,125 107,175 93,175" fill="#ffffff"/>
+          <polygon points="97,128 103,128 105,160 100,168 95,160" fill="#dc2626"/>
+          <path d="M 60 130 L 85 160 L 45 160 Z" fill="#1e293b"/>
+          <path d="M 140 130 L 115 160 L 155 160 Z" fill="#1e293b"/>
+        `;
+      } else if (clothes === 'bride') {
+        clothesSVG = `
+          <path d="M 50 145 C 50 120, 150 120, 150 145 L 175 200 L 25 200 Z" fill="#ffffff" stroke="#f1f5f9" stroke-width="2"/>
+          <path d="M 75 145 Q 100 160 125 145" stroke="#f87171" stroke-width="2" fill="none" opacity="0.3"/>
+          <circle cx="100" cy="148" r="4" fill="#f43f5e"/>
+        `;
+      } else if (clothes === 'dino') {
+        clothesSVG = `
+          <path d="M 45 145 C 45 120, 155 120, 155 145 L 165 200 L 35 200 Z" fill="#10b981"/>
+          <path d="M 90 160 Q 100 145 110 160 Q 115 170 100 175 Z" fill="#047857"/>
+          <circle cx="106" cy="155" r="1.5" fill="#ffffff"/>
+        `;
+      } else if (clothes === 'superhero') {
+        clothesSVG = `
+          <path d="M 45 145 C 45 120, 155 120, 155 145 L 165 200 L 35 200 Z" fill="#2563eb"/>
+          <polygon points="100,150 112,158 108,172 92,172 88,158" fill="#facc15"/>
+          <text x="100" y="165" font-size="12" font-weight="bold" fill="#dc2626" text-anchor="middle">S</text>
+        `;
+      } else if (clothes === 'floral_dress') {
+        clothesSVG = `
+          <path d="M 50 145 C 50 120, 150 120, 150 145 L 175 200 L 25 200 Z" fill="#f472b6"/>
+          <circle cx="75" cy="165" r="5" fill="#fef08a"/><circle cx="125" cy="175" r="5" fill="#fef08a"/>
+          <circle cx="100" cy="185" r="5" fill="#ffffff"/>
+        `;
+      } else {
+        clothesSVG = `
+          <path d="M 45 145 C 45 120, 155 120, 155 145 L 165 200 L 35 200 Z" fill="#8b5cf6"/>
+          <path d="M 85 130 C 85 145, 115 145, 115 130 Z" fill="#7c3aed"/>
+        `;
+      }
+
+      // 2. DESENHO DOS OLHOS
+      let eyesSVG = '';
+      if (eyeShape === 'happy') {
+        eyesSVG = `
+          <path d="M 78 84 Q 85 75 92 84" stroke="${eyeColor}" stroke-width="3.5" fill="none" stroke-linecap="round"/>
+          <path d="M 108 84 Q 115 75 122 84" stroke="${eyeColor}" stroke-width="3.5" fill="none" stroke-linecap="round"/>
+        `;
+      } else if (eyeShape === 'wink') {
+        eyesSVG = `
+          <circle cx="85" cy="82" r="4.5" fill="${eyeColor}"/>
+          <circle cx="86.5" cy="80.5" r="1.5" fill="#ffffff"/>
+          <path d="M 108 82 Q 115 88 122 82" stroke="${eyeColor}" stroke-width="3.5" fill="none" stroke-linecap="round"/>
+        `;
+      } else if (eyeShape === 'stars') {
+        eyesSVG = `
+          <polygon points="85,73 87,79 93,79 88,83 90,89 85,85 80,89 82,83 77,79 83,79" fill="${eyeColor}"/>
+          <polygon points="115,73 117,79 123,79 118,83 120,89 115,85 110,89 112,83 107,79 113,79" fill="${eyeColor}"/>
+        `;
+      } else {
+        eyesSVG = `
+          <circle cx="85" cy="82" r="4.5" fill="${eyeColor}"/>
+          <circle cx="115" cy="82" r="4.5" fill="${eyeColor}"/>
+          <circle cx="86.5" cy="80.5" r="1.5" fill="#ffffff"/>
+          <circle cx="116.5" cy="80.5" r="1.5" fill="#ffffff"/>
+        `;
+      }
+
+      // 3. DESENHO DA BOCA
+      let mouthSVG = '';
+      if (mouthShape === 'open') {
+        mouthSVG = `<path d="M 90 95 Q 100 112 110 95 Z" fill="${mouthColor}"/>`;
+      } else if (mouthShape === 'neutral') {
+        mouthSVG = `<line x1="91" y1="98" x2="109" y2="98" stroke="${mouthColor}" stroke-width="3.5" stroke-linecap="round"/>`;
+      } else if (mouthShape === 'surprised') {
+        mouthSVG = `<ellipse cx="100" cy="98" rx="6" ry="7" fill="${mouthColor}"/>`;
+      } else {
+        mouthSVG = `<path d="M 90 96 Q 100 107 110 96" stroke="${mouthColor}" stroke-width="3.5" fill="none" stroke-linecap="round"/>`;
+      }
+
+      // 4. ROSTO E PESCOÇO
+      let headSVG = `
+        <rect x="88" y="115" width="24" height="20" rx="5" fill="${skin}"/>
+        <circle cx="100" cy="85" r="42" fill="${skin}"/>
+        ${eyesSVG}
+        ${mouthSVG}
+        <circle cx="77" cy="90" r="5" fill="#f87171" opacity="0.3"/>
+        <circle cx="123" cy="90" r="5" fill="#f87171" opacity="0.3"/>
+      `;
+
+      // 5. CABELO / VÉU
+      let hairSVG = '';
+      if (clothes === 'augustinian_girl') {
+        hairSVG = `
+          <path d="M 55 85 C 55 40, 145 40, 145 85 L 150 145 C 140 150, 60 150, 50 145 Z" fill="#111111"/>
+          <path d="M 60 65 C 60 48, 140 48, 140 65 L 140 75 L 60 75 Z" fill="#ffffff"/>
+        `;
+      } else if (clothes === 'bride') {
+        hairSVG = `
+          <path d="M 50 50 C 50 30, 150 30, 150 50 L 170 180 Q 100 200 30 180 Z" fill="#ffffff" opacity="0.5" stroke="#e2e8f0"/>
+          <path d="M 60 80 C 58 45, 142 45, 140 80 C 145 105, 138 130, 138 130 C 120 100, 80 100, 62 130 C 62 130, 55 105, 60 80 Z" fill="${hair}"/>
+          <path d="M 70 52 Q 100 42 130 52" stroke="#facc15" stroke-width="3" fill="none"/>
+          <circle cx="100" cy="45" r="3" fill="#38bdf8"/>
+        `;
+      } else if (currentGender === 'boy') {
+        hairSVG = `
+          <path d="M 58 80 C 55 45, 145 45, 142 80 C 142 80, 130 55, 100 55 C 70 55, 58 80, 58 80 Z" fill="${hair}"/>
+          <path d="M 62 70 Q 80 50 100 68 Q 120 50 138 70 Q 120 58 100 60 Q 80 58 62 70 Z" fill="${hair}"/>
+        `;
+      } else {
+        hairSVG = `
+          <path d="M 55 80 C 50 110, 52 145, 58 150 C 68 150, 70 120, 70 90 L 130 90 C 130 120, 132 150, 142 150 C 148 145, 150 110, 145 80 C 145 40, 55 40, 55 80 Z" fill="${hair}"/>
+          <path d="M 60 70 Q 80 52 100 65 Q 120 52 140 70 C 130 50, 70 50, 60 70 Z" fill="${hair}"/>
+        `;
+      }
+
+      // 6. ACESSÓRIO
+      let accessorySVG = '';
+      if (accessory === 'glasses') {
+        accessorySVG = `
+          <circle cx="83" cy="82" r="11" fill="none" stroke="#1e293b" stroke-width="2.5"/>
+          <circle cx="117" cy="82" r="11" fill="none" stroke="#1e293b" stroke-width="2.5"/>
+          <line x1="94" y1="82" x2="106" y2="82" stroke="#1e293b" stroke-width="2.5"/>
+        `;
+      } else if (accessory === 'cap') {
+        accessorySVG = `
+          <path d="M 56 70 C 56 35, 144 35, 144 70 Z" fill="#ef4444"/>
+          <rect x="52" y="65" width="96" height="12" rx="4" fill="#dc2626"/>
+          <circle cx="100" cy="32" r="8" fill="#ffffff"/>
+        `;
+      } else if (accessory === 'baby') {
+        accessorySVG = `
+          <path d="M 50 155 Q 80 185 105 180" stroke="${skin}" stroke-width="16" stroke-linecap="round" fill="none"/>
+          <path d="M 150 155 Q 120 185 95 180" stroke="${skin}" stroke-width="16" stroke-linecap="round" fill="none"/>
+          <ellipse cx="125" cy="168" rx="26" ry="18" fill="#a5f3fc" transform="rotate(-15 125 168)"/>
+          <circle cx="138" cy="158" r="12" fill="#fed7aa"/>
+          <path d="M 134 159 Q 137 162 140 159" stroke="#78350f" stroke-width="1.5" fill="none"/>
+          <path d="M 141 157 Q 143 159 145 157" stroke="#78350f" stroke-width="1.5" fill="none"/>
+          <circle cx="139" cy="162" r="2.5" fill="#f87171" opacity="0.4"/>
+          <path d="M 130 152 C 130 142, 146 145, 146 155 Z" fill="#67e8f9"/>
+        `;
+      }
+
+      svg.innerHTML = clothesSVG + headSVG + hairSVG + accessorySVG;
+    }
+
+    function randomize() {
+      const skins = ['#f1c27d', '#ffdbac', '#e0ac69', '#8d5524', '#c68642', '#3d2314'];
+      const hairs = ['#4a312c', '#090806', '#b89778', '#a52a2a', '#d6c4c2', '#e6cea8'];
+      const eyeColors = ['#2d3748', '#1e3a8a', '#15803d', '#78350f', '#000000', '#7c3aed'];
+      const mouthColors = ['#2d3748', '#dc2626', '#e11d48', '#78350f', '#000000'];
+      const bgs = ['#b6e3f4', '#fef08a', '#bbf7d0', '#fbcfe8', '#ddd6fe', '#fed7aa'];
+
+      document.getElementById('skin-color').value = skins[Math.floor(Math.random() * skins.length)];
+      document.getElementById('hair-color').value = hairs[Math.floor(Math.random() * hairs.length)];
+      document.getElementById('eye-color').value = eyeColors[Math.floor(Math.random() * eyeColors.length)];
+      document.getElementById('mouth-color').value = mouthColors[Math.floor(Math.random() * mouthColors.length)];
+      document.getElementById('bg-color').value = bgs[Math.floor(Math.random() * bgs.length)];
+
+      const eyeShapeSelect = document.getElementById('eye-shape-select');
+      eyeShapeSelect.selectedIndex = Math.floor(Math.random() * eyeShapeSelect.options.length);
+
+      const mouthShapeSelect = document.getElementById('mouth-shape-select');
+      mouthShapeSelect.selectedIndex = Math.floor(Math.random() * mouthShapeSelect.options.length);
+
+      const clothesSelect = document.getElementById('clothes-select');
+      clothesSelect.selectedIndex = Math.floor(Math.random() * clothesSelect.options.length);
+
+      const accSelect = document.getElementById('accessory-select');
+      accSelect.selectedIndex = Math.floor(Math.random() * accSelect.options.length);
+
+      renderAvatar();
+    }
+
+    function downloadPNG() {
+      const svgElement = document.getElementById('avatar-svg');
+      const bg = document.getElementById('bg-color').value;
+      const rawName = document.getElementById('name-input').value.trim() || 'meu-avatar';
+      const cleanName = rawName.toLowerCase().replace(/[^a-z0-9à-ú]/gi, '-');
+
+      const btn = document.getElementById('download-btn');
+      const originalText = btn.innerHTML;
+      btn.innerHTML = '⏳ Salvando...';
+      btn.disabled = true;
+
+      const canvas = document.createElement('canvas');
+      canvas.width = 500;
+      canvas.height = 500;
+      const ctx = canvas.getContext('2d');
+
+      ctx.fillStyle = bg;
+      ctx.beginPath();
+      ctx.arc(250, 250, 250, 0, Math.PI * 2);
+      ctx.fill();
+
+      const xml = new XMLSerializer().serializeToString(svgElement);
+      const svgBlob = new Blob([xml], { type: 'image/svg+xml;charset=utf-8' });
+      const url = URL.createObjectURL(svgBlob);
+
+      const img = new Image();
+      img.onload = function() {
+        ctx.drawImage(img, 0, 0, 500, 500);
+        URL.revokeObjectURL(url);
+
+        const pngUrl = canvas.toDataURL('image/png');
+        const downloadLink = document.createElement('a');
+        downloadLink.href = pngUrl;
+        downloadLink.download = `${cleanName}-avatar.png`;
+        document.body.appendChild(downloadLink);
+        downloadLink.click();
+        document.body.removeChild(downloadLink);
+
+        btn.innerHTML = '✅ Salvo!';
+        setTimeout(() => {
+          btn.innerHTML = originalText;
+          btn.disabled = false;
+        }, 2000);
+      };
+
+      img.onerror = function() {
+        URL.revokeObjectURL(url);
+        alert('Tente novamente baixar o avatar!');
+        btn.innerHTML = originalText;
+        btn.disabled = false;
+      };
+
+      img.src = url;
+    }
+
+    // Eventos
+    document.getElementById('skin-color').addEventListener('input', renderAvatar);
+    document.getElementById('hair-color').addEventListener('input', renderAvatar);
+    document.getElementById('eye-color').addEventListener('input', renderAvatar);
+    document.getElementById('eye-shape-select').addEventListener('change', renderAvatar);
+    document.getElementById('mouth-color').addEventListener('input', renderAvatar);
+    document.getElementById('mouth-shape-select').addEventListener('change', renderAvatar);
+    document.getElementById('bg-color').addEventListener('input', renderAvatar);
+    document.getElementById('clothes-select').addEventListener('change', renderAvatar);
+    document.getElementById('accessory-select').addEventListener('change', renderAvatar);
+
+    // Inicializa
+    setGender('boy');
+  </script>
+
+</body>
+</html>
