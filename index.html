@@ -421,13 +421,17 @@
       let backHairSVG = '';
       let frontHairSVG = '';
 
-      if  (hairStyle === 'long') {
+      if (hairStyle === 'short') {
+        frontHairSVG = `
+          <path d="M 62 75 C 60 55, 65 40, 80 38 C 95 36, 120 30, 130 42 C 138 52, 138 65, 138 75 C 120 62, 80 62, 62 75 Z" fill="${hair}"/>
+        `;
+      } else if (hairStyle === 'long') {
         backHairSVG = `
           <path d="M 52 80 C 48 110, 50 150, 68 155 C 75 155, 78 130, 78 90 L 122 90 C 122 130, 125 155, 132 155 C 150 150, 152 110, 148 80 C 145 40, 55 40, 52 80 Z" fill="${hair}"/>
         `;
         frontHairSVG = `
           <path d="M 45 75 C 45 30, 155 30, 155 75 C 130 52, 110 53, 100 54 C 90 53, 70 52, 45 75 Z" fill="${hair}"/>
-`;
+        `;
       } else if (hairStyle === 'curly') {
         backHairSVG = `
           <circle cx="65" cy="55" r="18" fill="${hair}"/>
@@ -447,17 +451,13 @@
           <circle cx="115" cy="52" r="9" fill="${hair}"/>
           <circle cx="130" cy="58" r="8" fill="${hair}"/>
         `;
-      } else if (hairStyle === 'short') {
-        frontHairSVG = `
-          <path d="M 62 75 C 60 55, 65 40, 80 38 C 95 36, 120 30, 130 42 C 138 52, 138 65, 138 75 C 120 62, 80 62, 62 75 Z" fill="${hair}"/>
-        `;
       } else if (hairStyle === 'nun') {
         backHairSVG = `
           <path d="M 50 85 C 50 35, 150 35, 150 85 L 158 150 C 145 158, 55 158, 42 150 Z" fill="#111111"/>
         `;
-        frontHairSVG = 
+        frontHairSVG = `
           <path d="M 45 75 C 45 30, 155 30, 155 75 C 130 52, 110 53, 100 54 C 90 53, 70 52, 45 75 Z" fill="#ffffff"/>
-`;`
+        `;
       } else if (hairStyle === 'bride') {
         backHairSVG = `
           <path d="M 45 50 C 45 25, 155 25, 155 50 L 175 180 Q 100 200 25 180 Z" fill="#ffffff" opacity="0.6" stroke="#cbd5e1"/>
@@ -465,7 +465,6 @@
         `;
         frontHairSVG = `
           <path d="M 45 75 C 45 30, 155 30, 155 75 C 130 52, 110 53, 100 54 C 90 53, 70 52, 45 75 Z" fill="${hair}"/>
-`;
           <path d="M 70 50 Q 100 40 130 50" stroke="#facc15" stroke-width="3" fill="none"/>
           <circle cx="100" cy="43" r="3.5" fill="#38bdf8"/>
         `;
